@@ -1,0 +1,20 @@
+FROM node:16.3.0-alpine3.13
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY . /usr/src/app
+
+# Set ENV variables from --build-arg params
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+ENV TZ="Europe/Helsinki"
+ENV NODE_ENV="development"
+
+RUN npm install --silent
+RUN npm run test
+RUN npm run build
+
+# Change the timezone
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+EXPOSE 8055
+CMD [ "node", "./build/src/server.js" ]

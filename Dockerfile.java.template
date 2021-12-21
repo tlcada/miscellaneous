@@ -1,0 +1,6 @@
+FROM openjdk:12-alpine
+VOLUME /tmp
+VOLUME /logs
+ADD /target/example-service.jar example-service.jar
+EXPOSE 8443
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/example-service.jar"]
